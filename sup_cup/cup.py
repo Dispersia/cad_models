@@ -19,14 +19,26 @@ with BuildPart() as cup_holder:
     with BuildSketch(Plane.XY.offset(bottom_hole_height + wall * 2)) as top_hole:
         Circle(radius=diameter / 2 - wall)
     extrude(amount=height, mode=Mode.SUBTRACT)
-    fillet(cup_holder.edges().group_by(Axis.Z)[-1], 0.5)
     with BuildSketch() as bottom_hole:
         Circle(radius=bottom_hole_diameter / 2)
     extrude(amount=bottom_hole_height, mode=Mode.SUBTRACT)
     with BuildSketch() as hook_cut:
-        with Locations((0, 35, 0)):
+        with Locations((0, 35)):
             Rectangle(bottom_hole_height/ 2, bottom_hole_height)
     extrude(amount=bottom_hole_height, mode=Mode.SUBTRACT)
+    with BuildSketch() as bottom_drain_cut:
+        with Locations((0, -35)):
+            Rectangle(5, 30)
+    extrude(amount=bottom_hole_height / 2, mode=Mode.SUBTRACT)
+    with BuildSketch() as bottom_drain_cut:
+        with Locations((35, 0), (-35, 0)):
+            Rectangle(30, 5)
+    extrude(amount=bottom_hole_height / 2, mode=Mode.SUBTRACT)
+    with BuildSketch(Plane.XY.offset(bottom_hole_height)) as drain_holes:
+        with Locations((40, 0), (0, 40), (0, 0), (-40, 0), (0, -40)):
+            Circle(radius=10)
+    extrude(amount=20, mode=Mode.SUBTRACT)
+    """
     with BuildSketch(Plane.XZ.offset(-20)) as hook:
         with BuildLine() as line:
             l1 = Line((-hook_width / 2, bottom_hole_height), (hook_width / 2, 2))
@@ -34,8 +46,10 @@ with BuildPart() as cup_holder:
             #l3 = ThreePointArc((hook_width / 2, hook_width / 2), (hook_width / 2, hook_width / 2 * 1.5), (0.0, hook_width / 2))
             #l4 = Line((0.0, hook_width / 2), (0, 0))
         make_face()
-    extrude(amount = wall * 2)
-
+    #extrude(amount = wall * 2)
+    """
+    fillet(cup_holder.edges(), radius = 0.5)
+    cup_holder.color = Color("steelblue")
 
 def main():
     return {
