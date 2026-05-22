@@ -33,6 +33,8 @@
           libxrender
           libxmu
           stdenv.cc.cc.lib
+          expat
+          zlib
         ]);
       };
     };
