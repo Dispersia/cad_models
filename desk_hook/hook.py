@@ -1,11 +1,11 @@
 from build123d import *
 
-desk_height = 40
+thickness = 8
+desk_height = 32 + thickness * 2
 desk_width = 65
-bag_hook_height = desk_height + 70
-bag_hook_angle = 15
-hook_stop = 30
-thickness = 10
+bag_hook_height = desk_height + 50
+bag_hook_angle = 30
+hook_stop = 20
 
 
 with BuildPart() as hook:
@@ -37,12 +37,10 @@ with BuildPart() as hook:
         make_face()
     extrude(amount=25)
     fillet(hook.edges(), radius=1.5)
-
 """
 def main():
     return {
         "hook": hook
     }
 """
-
 export_stl(hook.part, "hook.stl")
