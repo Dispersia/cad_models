@@ -24,6 +24,7 @@
             if [ ! -d .venv ]; then
               uv venv .venv --python python3.12
               uv pip install build123d
+              uv pip install git+https://github.com/Ruudjhuu/gridfinity_build123d
             fi
             source .venv/bin/activate
           '';
