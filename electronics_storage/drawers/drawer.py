@@ -1,11 +1,30 @@
 from build123d import *
 
 with BuildPart() as handle:
-    height = 10
+    height = 15
+    length = 20
+    width = 50
 
-    with BuildSketch() as handle_sk:
-        Rectangle(5, 5)
-    extrude(amount=5)
+    wall = 5
+
+    with BuildSketch(Plane.XZ) as handle_sk:
+        with BuildLine() as handle_line:
+            l1 = Line((0, 0), (0, height))
+            c1 = Bezier(l1 @ 1, (10, 10), (length, height - 5))
+            l2 = Line(c1 @ 1, (length, height - 10))
+            c2 = Bezier(l2 @ 1, (5, 5), (0, 0))
+        make_face()
+    extrude(amount=width)
+
+    edges = handle.edges().group_by(Axis.X)[-1]
+
+    fillet(edges, radius=1)
+
+    with BuildSketch() as handle_cut:
+        with Locations((10, -25)):
+            Rectangle(length - wall, width - 10)
+    extrude(amount=height, mode=Mode.SUBTRACT)
+
 
 with BuildPart() as drawer:
     height = 35
@@ -22,6 +41,9 @@ with BuildPart() as drawer:
 
     top_face = drawer.faces().sort_by(Axis.Z)[-1]
     offset(amount=-wall, openings=top_face)
+
+    with Locations((110, 25, 10)):
+        add(handle)
 
 with BuildPart() as fastener:
     height = 1.5
@@ -74,7 +96,22 @@ with BuildPart() as cabinet:
     ):
         add(fastener)
 
-def main():
-    return {
-        "drawer": handle 
-    }
+with BuildPart() as roof:
+    wall = 2.5
+    length = 230
+
+    with BuildSketch() as roof_sk:
+        Rectangle(length, length)
+    extrude(amount=wall)
+
+    with Locations(
+        (-100, -113, 0),
+        (-100, 114.5, 0),
+        (100, -113, 0),
+        (100, 114.5, 0)
+    ):
+        add(fastener)
+
+export_stl(cabinet.part, "cabinet.stl")
+export_stl(drawer.part, "drawer.stl")
+export_stl(roof.part, "roof.stl")
