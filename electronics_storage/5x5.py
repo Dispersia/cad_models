@@ -14,7 +14,7 @@ plate = BasePlateEqual(
 )
 
 bin = Bin(
-    BaseEqual(grid_x=1, grid_y=2),
+    BaseEqual(grid_x=1, grid_y=1),
     height_in_units=4,
     compartments=CompartmentsEqual(compartment_list=[Compartment()])
 )
@@ -28,4 +28,4 @@ def main():
 """
 
 #export_stl(plate, "5x5.stl")
-export_stl(bin, "bin.stl")
+export_stl(bin, "bin1x1.stl")
